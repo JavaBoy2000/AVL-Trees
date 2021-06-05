@@ -671,7 +671,7 @@ public:
                             prev_node->left = prev_node->left->right;
                         } // end else if
                 } // end else if
-        // I have changed this.
+        // I have changed this. Changed it again.
 
     } // end doing_stuff_in_RS
 
