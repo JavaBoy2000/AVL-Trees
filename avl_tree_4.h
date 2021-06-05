@@ -610,6 +610,38 @@ public:
         preorder(node_pointer->right);
     } // end preorder
 
+    void doing_stuff_in_LS (node<T2> *curr_node, node<T2> *prev_node) {
+        if (is_leaf(curr_node->left)) { 
+                std::cout << "Case 1" << std::endl;
+                curr_node->data = curr_node->left->data;
+                curr_node->left = nullptr;
+                delete curr_node->left;
+            } // end if
+                else if (curr_node->left->right == nullptr) { 
+                    std::cout << "Case 2" << std::endl;
+                    curr_node->data = curr_node->left->data;
+                    curr_node->left = curr_node->left->left;
+                } // end else if
+                else if (curr_node->left->left == nullptr) {
+                    if (is_leaf(find_max_node(curr_node->left))) {
+                        std::cout << "Case 3" << std::endl;
+                        std::cout << "find_max_node(curr_node->left)->data)->data: " << find_max_node(curr_node->left)->data << std::endl;
+                        prev_node = prev_node_getter(root, find_max_node(curr_node->left)->data);
+                        curr_node->data = find_max_node(curr_node->left)->data;
+                        prev_node->right = nullptr;
+                        delete prev_node->right;
+                    } // end if
+                        else if (is_internal_node(find_max_node(curr_node->left))) {
+                            std::cout << "Case 4" << std::endl;
+                            prev_node = prev_node_getter(root, find_max_node(curr_node->left)->data);
+                            curr_node->data = find_max_node(curr_node->left)->data;
+                            prev_node->right = prev_node->right->left;
+                        } // end else if
+                } // end else if
+    } // end doing_stuff_in_LS
+
+    
+
 }; // end class
 
 #endif
