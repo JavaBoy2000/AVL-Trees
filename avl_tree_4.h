@@ -640,7 +640,41 @@ public:
                 } // end else if
     } // end doing_stuff_in_LS
 
-    
+    void doing_stuff_in_RS (node<T2> *curr_node, node<T2> *prev_node) {
+        // right subtree does exist and the left subtree does not
+                std::cout << "You're in the left subtree existence INTERNAL_NODE conditional!!" << std::endl;
+                // There are truly six cases. Try four bitch. Try eight... maybe more
+                if (is_leaf(curr_node->right)) { 
+                    std::cout << "Case 5" << std::endl;
+                    curr_node->data = curr_node->right->data;
+                    curr_node->right = nullptr;
+                    delete curr_node->right;
+                } // end if
+                    else if (curr_node->right->left == nullptr) {
+                        std::cout << "Case 6" << std::endl;
+                        curr_node->data = curr_node->right->data;
+                        curr_node->right = curr_node->right->right; // moves
+                } // end else if
+                else if (curr_node->right->right == nullptr) { // no right subtree of RSR (Right Subtree Root)
+                    if (is_leaf(find_min_node(curr_node->right))) {
+                        std::cout << "Case 7" << std::endl;
+                        std::cout << "find_min_node(curr_node->right)->data)->data: " << find_min_node(curr_node->right)->data << std::endl;
+                        prev_node = prev_node_getter(root, find_min_node(curr_node->right)->data);
+                        curr_node->data = find_min_node(curr_node->right)->data;
+                        prev_node->left = nullptr;
+                        delete prev_node->left;
+                    } // end if
+                        else if (is_internal_node(find_min_node(curr_node->right))) {
+                            std::cout << "Case 8" << std::endl;
+                            prev_node = prev_node_getter(root, find_min_node(curr_node->right)->data);
+                            curr_node->data = find_min_node(curr_node->right)->data;
+                            prev_node->left = prev_node->left->right;
+                        } // end else if
+                } // end else if
+
+    } // end doing_stuff_in_RS
+
+
 
 }; // end class
 
