@@ -388,30 +388,43 @@ int main() {
     */
     // std::cout << "random_tree.root->right->left->left->right->data: " << random_tree.root->right->left->left->right->data << std::endl;
 
-    /*
     AVLTree<int> left_rotation_prev_node_cases;
 
     left_rotation_prev_node_cases.insert(42);
     left_rotation_prev_node_cases.insert(25);
     left_rotation_prev_node_cases.insert(67);
-    left_rotation_prev_node_cases.insert(65);
     left_rotation_prev_node_cases.insert(37);
     left_rotation_prev_node_cases.insert(77);
     left_rotation_prev_node_cases.insert(39);
     left_rotation_prev_node_cases.insert(71);
     left_rotation_prev_node_cases.insert(69);   
-    */
+
+    // left_rotation_prev_node_cases.remove(71);
+    std::cout << "leaf state of 71: " << left_rotation_prev_node_cases.is_leaf(left_rotation_prev_node_cases.root->right) << std::endl;
+    std::cout << "internal node of 71: " << left_rotation_prev_node_cases.is_internal_node(left_rotation_prev_node_cases.root->right) << std::endl;
+    std::cout << "left_rotation_prev_node_cases.root->right->data: " << left_rotation_prev_node_cases.root->right->data << std::endl;
+
+    std::cout << "inorder before removal of 71: ";
+    left_rotation_prev_node_cases.inorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+    std::cout << "preorder before removal of 71: ";
+    left_rotation_prev_node_cases.preorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+    std::cout << "postorder before removal of 71: ";
+    left_rotation_prev_node_cases.postorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+
 
     /*
-                42                                                      42
-               /  \                                                    /  \
-              /    \                                                  /    \
-             25    67                                                37    67
-              \      \       After left rotate on 25                /  \     \
-               37    77                =>                          25  39    77
-                \    /                                                       /
-                39  71                                                      71
-                    /                                                       /
+                42                                                      42                                                                  42
+               /  \                                                    /  \                                                                /  \
+              /    \                                                  /    \                                                              /    \
+             25    67                                                37    67                                                            /      \
+              \      \          After left rotate on 25             /  \     \            After left rotate on 67                       37      71
+               37    77    (prev_node right of node_pointer)       25  39    77       (prev_node left of node_pointer)                 /  \    /  \                                
+                \    /                 =>                                    /                      =>                                25  39  67  77
+                39  71                                                      71                                                                 \
+                    /                                                       /                                                                  69
                    69                                                      69
 
         1. left rotation with prev node on the right in the left subtree
@@ -422,7 +435,77 @@ int main() {
         // good. I don't know why that gets triggered because the height of the right
         // subtree of 67 is 3 but I don't think I have a conditional for the right
         // subtree only the left.
+
+
+            After removal of 71                  42
+                   =>                           /  \
+                                               /    \
+                                              /      \
+                                             37      69
+                                            /  \    /  \
+                                           25  39  67  77
+
+                                        Inorder traversal after removal
+                                            25 37 39 42 67 69 77
+                                        Preorder traversal after removal
+                                            42 25 37 39 67 77 69
+                                        Postorder traversal after removal
+                                            39 37 25 69 77 67 42 
+
+                                        Inorder traversal is correct
+                                        Preorder traversal is supposed to be
+                                            42 37 25 39 69 67 77
+                                        Postorder traversal is supposed to be
+                                            25 39 37 67 77 69 42
+
+                                        We can test whether these preorder and postorder
+                                        traversals are correct. The ones I outputted are incorrect.
+                                        Let's see what they look like
+
+                Preorder traversal will start at the root then
+                go to the left subtree then the right subtree
+
+                Postorder traversal will start at the bottom left
+                of the left subtree then when that's done it'll go
+                to the right subtree and do the same thing ending
+                at the root.
+
+        //
     */
+
+    std::cout << "left_rotation_prev_node_cases.root->data: " << left_rotation_prev_node_cases.root->data << std::endl; // 42
+    std::cout << "left_rotation_prev_node_cases.root->left->data: " << left_rotation_prev_node_cases.root->left->data << std::endl; // 37
+    std::cout << "left_rotation_prev_node_cases.root->left->left->data: " << left_rotation_prev_node_cases.root->left->left->data << std::endl; // 25
+    std::cout << "left_rotation_prev_node_cases.root->left->right->data: " << left_rotation_prev_node_cases.root->left->right->data << std::endl; // 39
+    std::cout << "left_rotation_prev_node_cases.root->right->data: " << left_rotation_prev_node_cases.root->right->data << std::endl; // 71
+    std::cout << "left_rotation_prev_node_cases.root->right->right->data: " << left_rotation_prev_node_cases.root->right->right->data << std::endl; // 77
+    std::cout << "left_rotation_prev_node_cases.root->right->left->data: " << left_rotation_prev_node_cases.root->right->left->data << std::endl; // 67
+    std::cout << "left_rotation_prev_node_cases.root->right->left->right->data: " << left_rotation_prev_node_cases.root->right->left->right->data << std::endl; // 69
+
+    left_rotation_prev_node_cases.remove(71);
+
+    std::cout << "inorder after removal of 71: ";
+    left_rotation_prev_node_cases.inorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+    std::cout << "preorder after removal of 71: ";
+    left_rotation_prev_node_cases.preorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+    std::cout << "postorder after removal of 71: ";
+    left_rotation_prev_node_cases.postorder(left_rotation_prev_node_cases.root);
+    std::cout << std::endl;
+
+     std::cout << "left_rotation_prev_node_cases.root->data: " << left_rotation_prev_node_cases.root->data << std::endl; // 42
+    std::cout << "left_rotation_prev_node_cases.root->left->data: " << left_rotation_prev_node_cases.root->left->data << std::endl; // 37
+    std::cout << "left_rotation_prev_node_cases.root->left->left->data: " << left_rotation_prev_node_cases.root->left->left->data << std::endl; // 25
+    std::cout << "left_rotation_prev_node_cases.root->left->right->data: " << left_rotation_prev_node_cases.root->left->right->data << std::endl; // 39
+    std::cout << "left_rotation_prev_node_cases.root->right->data: " << left_rotation_prev_node_cases.root->right->data << std::endl; // 71
+    std::cout << "left_rotation_prev_node_cases.root->right->right->data: " << left_rotation_prev_node_cases.root->right->right->data << std::endl; // 77
+    std::cout << "left_rotation_prev_node_cases.root->right->left->data: " << left_rotation_prev_node_cases.root->right->left->data << std::endl; // 67
+    // std::cout << "left_rotation_prev_node_cases.root->right->left->right->data: " << left_rotation_prev_node_cases.root->right->left->right->data << std::endl; // 69
+    
+    
+
+
 
     // std::cout << left_rotation_prev_node_cases.root->right->data << std::endl;
     // std::cout << "longest path of 67: " << left_rotation_prev_node_cases.longest_path_value(left_rotation_prev_node_cases.longestPath(left_rotation_prev_node_cases.root->right)) << std::endl;
@@ -461,6 +544,7 @@ int main() {
     left_rotate_prev_on_left.insert(79);
     left_rotate_prev_on_left.insert(81);
     */
+
     
     /*
             42                                                     42
@@ -561,6 +645,7 @@ int main() {
         // We need to be more thorough about this
     */
 
+    /*
     AVLTree<int> root_case_left_right_rotate;
 
     root_case_left_right_rotate.insert(25);
@@ -570,6 +655,9 @@ int main() {
     std::cout << root_case_left_right_rotate.root->data << std::endl;
     std::cout << root_case_left_right_rotate.root->right->data << std::endl;
     std::cout << root_case_left_right_rotate.root->left->data << std::endl;
+    */
+
+
     // very good 
     // root_case_left_right_rotate.inorder(root_case_left_right_rotate.root); // very good this works
 
@@ -617,6 +705,7 @@ int main() {
 
     */
 
+    /*
     AVLTree<int> root_case_right_left_rotate;
 
     root_case_right_left_rotate.insert(25);
@@ -625,7 +714,8 @@ int main() {
 
     std::cout << root_case_right_left_rotate.root->data << std::endl;
     std::cout << root_case_right_left_rotate.root->right->data << std::endl;
-    std::cout << root_case_left_right_rotate.root->left->data << std::endl;
+    std::cout << root_case_right_left_rotate.root->left->data << std::endl;
+    */
 
 
 

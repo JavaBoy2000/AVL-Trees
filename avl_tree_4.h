@@ -305,6 +305,8 @@ public:
 
     void recursive_out_of_balance_checker(node<T2>*node_pointer) {
         // We need to check to see that a node is out of balance whenever it's inserted
+        // std::cout << "in recursive_out_of_balance_checker" << std::endl;
+        // std::cout << node_pointer->data << std::endl;
         if (node_pointer == NULL) {
             return;
         } // end if
@@ -369,8 +371,8 @@ public:
                         std::cout << node_pointer->data << " needs a left rotation with prev on left side of node_pointer" << std::endl;
                         left_rotation_prev_on_left(node_pointer);
                     } // end else if
+                    return;
             } // end else if
-            return;
         recursive_out_of_balance_checker(node_pointer->left);
         recursive_out_of_balance_checker(node_pointer->right);
         // return false;
@@ -671,9 +673,134 @@ public:
                             prev_node->left = prev_node->left->right;
                         } // end else if
                 } // end else if
-        // I have changed this. Changed it again.
-
+    
     } // end doing_stuff_in_RS
+
+    void remove(const T2 &to_be_removed) {
+        node<T2> *curr_node = root;
+        node<T2> *prev_node = pub_prev; // this is another public data member
+        bool is_left = false;
+        bool is_right = false;
+        std::cout << "Removing... " << to_be_removed << std::endl;
+        while (curr_node != nullptr) {
+            if (to_be_removed > curr_node->data) {                               
+                prev_node = curr_node;
+                curr_node = curr_node->right;
+                is_right = true;
+                is_left = false;
+            } // end if
+            else if (to_be_removed < curr_node->data) { // second case
+                prev_node = curr_node;
+                curr_node = curr_node->left;
+                is_right = false;
+                is_left = true;
+            } // end else if
+            else if (to_be_removed == curr_node->data) {
+                break;
+            } // end third case
+            else {
+                throw std::invalid_argument("Error: Duplicate found");
+                // runs the catch block
+            } // end else
+        } // end while
+
+        /*
+        std::cout << "curr_node->data: " << curr_node->data << std::endl;
+        std::cout << "leaf state of curr_node: " << is_leaf(curr_node) << std::endl;
+        std::cout << "is_internal_node(" << curr_node->data << "): " << is_internal_node(curr_node) << std::endl;
+        std::cout << "prev_node->data: " << prev_node->data << std::endl;
+        std::cout << "prev_node->left: " << prev_node->left << std::endl;
+        std::cout << "prev_node->right: " << prev_node->right << std::endl;
+        */
+
+        // Removal of a leaf
+        if (is_leaf(curr_node)) {
+            std::cout << "You're in the LEAF conditional!!" << std::endl;
+            if (is_left) {
+                std::cout << "Triggered the left conditional" << std::endl;
+                prev_node->left = nullptr;
+            } // end if
+                else if (is_right) {
+                    std::cout << "Triggered the right conditional" << std::endl;
+                    prev_node->right = nullptr;
+                } // end else if
+            delete curr_node;
+        } // end if
+
+        // Removal of internal node
+        if (is_internal_node(curr_node) && (curr_node->right == nullptr) && (curr_node->left != nullptr)) { // right subtree
+        // does not exist and the left subtree does exist
+            std::cout << "You're in the left subtree existence INTERNAL_NODE conditional!!" << std::endl;
+            // There are truly six cases. Try four bitch
+            doing_stuff_in_LS(curr_node, prev_node);
+        } // end if
+            else if (is_internal_node(curr_node) && (curr_node->right != nullptr) && (curr_node->left == nullptr)) {
+            // right subtree does exist and the left subtree does not
+                std::cout << "You're in the right subtree existence INTERNAL_NODE conditional!!" << std::endl;
+                // There are truly six cases. Try four bitch. Try eight... maybe more. More like 9
+                doing_stuff_in_RS(curr_node, prev_node);
+            } // end else if
+            else if (is_internal_node(curr_node) && ((curr_node->right != nullptr) || (curr_node->left != nullptr))) {
+                // left or right subtree exists for curr_node
+                if (count_of_max_node(curr_node->left) < count_of_min_node(curr_node->right)) { 
+                    // this means that there are less traversals for the left subtree than there are in the right.
+                    std::cout << "count_of_max_node(curr_node->left) < count_of_min_node(curr_node->right)" << std::endl;
+                    doing_stuff_in_LS(curr_node, prev_node);
+                } // end if
+                    else if (count_of_max_node(curr_node->left) >= count_of_min_node(curr_node->right)) {
+                        std::cout << "count_of_max_node(curr_node->left) >= count_of_min_node(curr_node->right)" << std::endl;
+                        doing_stuff_in_RS(curr_node, prev_node);
+                    } // end else if
+            } // end else if
+
+        std::cout << "Inorder traversal after removal" << std::endl;
+        inorder(root);
+        std::cout << std::endl;
+        std::cout << "Preorder traversal after removal" << std::endl;
+        preorder(root);
+        std::cout << std::endl;
+        std::cout << "Postorder traversal after removal" << std::endl;
+        postorder(root);
+        std::cout << std::endl;
+
+        correct_balance_factor_setter_with_recursion(root);
+        recursive_out_of_balance_checker(root); 
+        count_setter(root);
+
+    } // end remove
+
+    node<T2> *find_min_node(node<T2> *nody) { // i.e. feed it the curr_node
+        while(nody->left != nullptr) { // 
+            nody = nody->left; // this is that find_min function we need for our own project
+            // Does this actually traverse?
+        } // end while
+	    return nody;
+    } // end find_min_node
+
+    node<T2> *find_max_node(node<T2> *nody) { // i.e. feed it the curr_node
+        while(nody->right != nullptr) {
+            nody = nody->right;
+        } // end while
+	    return nody;
+    } // end find_max_node
+
+    int count_of_max_node(node<T2> *nody) { // use this for the left subtree
+        int count_max = 0;
+        while(nody->right != nullptr) {
+            nody = nody->right;
+            count_max += 1;
+        } // end while
+        return count_max;
+    } // end count_of_max_node
+
+    int count_of_min_node(node<T2> *nody) { // use this for the right subtree
+        int count_min = 0;
+        while(nody->left != nullptr) {
+            nody = nody->left;
+            count_min += 1;
+        } // end while
+        return count_min;
+    } // end count_of_min_node
 
 
 
