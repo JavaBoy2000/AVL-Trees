@@ -802,8 +802,25 @@ public:
         return count_min;
     } // end count_of_min_node
 
+    void print_tree(std::ostream& Stream = std::cout) const {
+        if(root != nullptr) {
+            print_tree_helper(Stream, 0, root);
+        } // end if
+        else {
+            Stream << "<empty>\n";
+        } // end else
+    } // end print_tree
 
-
+    void print_tree_helper(std::ostream& Stream, int spaces, node<T2>* temp) const {
+        if(temp != nullptr) {
+            print_tree_helper(Stream,spaces+2, temp->right);
+            for(int i = 0; i < spaces; i++){
+                Stream << " ";
+            } // end for
+            Stream<< temp->data << "\n";
+            print_tree_helper(Stream,spaces+2, temp->left);
+        } // end if
+    } // end print_tree_helper
 }; // end class
 
 #endif
