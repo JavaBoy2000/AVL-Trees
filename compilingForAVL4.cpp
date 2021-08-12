@@ -502,7 +502,7 @@ int main() {
     std::cout << "left_rotation_prev_node_cases.root->right->right->data: " << left_rotation_prev_node_cases.root->right->right->data << std::endl; // 77
     std::cout << "left_rotation_prev_node_cases.root->right->left->data: " << left_rotation_prev_node_cases.root->right->left->data << std::endl; // 67
     // std::cout << "left_rotation_prev_node_cases.root->right->left->right->data: " << left_rotation_prev_node_cases.root->right->left->right->data << std::endl; // 69
-    
+    left_rotation_prev_node_cases.print_tree(); // it works
     
 
 
